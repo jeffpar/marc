@@ -343,9 +343,11 @@ for (let i = 2; i < process.argv.length; i++) {
         arg = arg.substr(2);
         let parts = arg.split('=');
         let value = true;
+        arg = parts[0];
         if (parts.length > 1) {
-            arg = parts[0];
             value = parts[1];
+        } else {
+            value = process.argv[++i];
         }
         if (args[arg] != undefined) {
             console.log("too many '" + arg + "' arguments");
