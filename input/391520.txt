@@ -1,0 +1,33 @@
+LDR    01581cam a22003857a 4500
+001    17294606
+005    20151020125245.0
+008    120511s2013    nyua   j      000 1 eng d
+906    $a7$bcbc$ccopycat$d2$encip$f20$gy-gencatlg
+925 0  $aacquire$b1 shelf copy$xpolicy default
+925 1  $aacquire$b2 shelf copies$xpolicy default
+955    $apc17 2012-05-11$bxk07 2014-03-06 z-processor$ixk07 2014-03-10 (telework) c.1 to CALM$trk08 2014-04-29 copy 2 added
+010    $a  2012939473
+016 7  $a016453435$2Uk
+020    $a0449810798
+020    $a9780449810798
+035    $a(OCoLC)ocn818318095
+040    $aYDXCP$cYDXCP$dBTCTA$dBDX$dOCLCQ$dUKMGB$dIK2$dIEP$dUIU$dCGP$dFUG$dOCLCF$dDLC
+042    $alccopycat
+050 00 $aPZ8.3.F642$bRo 2013
+082 04 $a[E]$223
+100 1  $aFliess, Sue.
+245 10 $aRobots, robots everywhere! /$cby Sue Fliess ; illustrated by Bob Staake.
+260    $aNew York :$bGolden Books,$cc2013.
+300    $a1 v. (unpaged) :$bcol. ill. ;$c21 cm.
+490 1  $aA little golden book
+520    $aRhyming text explains all the things robots do, from exploring other planets to milking cows.
+650  0 $aRobots$vJuvenile fiction.
+650  0 $aStories in rhyme.
+650  0 $aPicture books for children.
+650  1 $aStories in rhyme.
+700 1  $aStaake, Bob,$d1957-,$eill.
+830  0 $aLittle golden books.
+856 42 $3Contributor biographical information$uhttp://www.loc.gov/catdir/enhancements/fy1601/2012939473-b.html
+856 42 $3Publisher description$uhttp://www.loc.gov/catdir/enhancements/fy1601/2012939473-d.html
+
+

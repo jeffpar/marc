@@ -1,0 +1,37 @@
+000	  	01922cam 2200445Ii 4500$
+001	  	ocn892701961$
+003	  	OCoLC$
+005	  	20181003131100.0$
+008	  	141009t20152015nyua j 000 0 eng d$
+020	  	$a9781250065001$q(hardback)$
+020	  	$a1250065003$q(hardback)$
+035	  	$a(OCoLC)892701961$
+040	  	$aYDXCP$beng$erda$cYDXCP$dBTCTA$dBDX$dOCLCQ$dOCP$dCLE$dOCLCO$
+049	  	$aUOKA$
+050	 4	$aQA76.6$b.L5785 2015$
+082	04	$a005.13$223$
+092	  	$aJ005.13 L7409H 2015 $
+092	  	$aJ005.13 L7409H 2015$
+100	1 	$aLiukas, Linda$
+245	10	$aHello Ruby :$badventures in coding /$cLinda Liukas.$
+246	1 	$iAt head of title :$aAdventures in coding$
+250	  	$aFirst edition.$
+264	 1	$aNew York :$bFeiwel and Friends, an imprint of Macmillan,$c2015.$
+264	 4	$c©2015$
+300	  	$a112 pages :$bcolor illustrations;$c24 cm$
+336	  	$atext$btxt$2rdacontent$
+336	  	$astill image$bsti$2rdacontent$
+337	  	$aunmediated$bn$2rdamedia$
+338	  	$avolume$bnc$2rdacarrier$
+500	  	$a"Activities included for all future coders"--Cover.$
+500	  	$a"The world's most whimsical way to learn about Computers, Programming, and Technology"--Cover.$
+520	  	$aMeet Ruby--a small girl with a huge imagination. In Ruby's world, anything is possible if you set your mind to it. As Ruby embarks on her adventure, kids will be introduced through storytelling to the basic concepts of coding. With activities included in every chapter, future kid coders will be thrilled to put their own imaginations to work.$
+526	0 	$aAccelerated Reader AR$bMG$c4.4$d0.5$z181483.$
+650	  	$aComputer programming$vJuvenile literature.$
+650	  	$aCoding theory$vJuvenile literature.$
+938	  	$aBrodart$bBROD$n111220149$
+938	  	$aBaker and Taylor$bBTCP$nBK0015791407$
+938	  	$aYBP Library Services$bYANK$n12110531$
+994	  	$aC0$bUOK$
+997	  	$a3138656$
+999	  	$a3138656$b03138656$c201503138656$

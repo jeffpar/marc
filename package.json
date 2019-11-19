@@ -1,0 +1,15 @@
+{
+  "name": "marc",
+  "version": "1.0.0",
+  "description": "MARC record processing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jeff Parsons",
+  "license": "MIT",
+  "dependencies": {
+    "marc4js": "0.0.10",
+    "request": "^2.88.0"
+  }
+}

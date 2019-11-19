@@ -1,0 +1,479 @@
+{
+  "_controlFields": [
+    {
+      "_data": "17294606",
+      "_tag": "001"
+    },
+    {
+      "_data": "20151020125245.0",
+      "_tag": "005"
+    },
+    {
+      "_data": "120511s2013    nyua   j      000 1 eng d",
+      "_tag": "008"
+    }
+  ],
+  "_dataFields": [
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "7"
+        },
+        {
+          "_code": "b",
+          "_data": "cbc"
+        },
+        {
+          "_code": "c",
+          "_data": "copycat"
+        },
+        {
+          "_code": "d",
+          "_data": "2"
+        },
+        {
+          "_code": "e",
+          "_data": "ncip"
+        },
+        {
+          "_code": "f",
+          "_data": "20"
+        },
+        {
+          "_code": "g",
+          "_data": "y-gencatlg"
+        }
+      ],
+      "_indicator1": " ",
+      "_indicator2": " ",
+      "_tag": "906"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "acquire"
+        },
+        {
+          "_code": "b",
+          "_data": "1 shelf copy"
+        },
+        {
+          "_code": "x",
+          "_data": "policy default"
+        }
+      ],
+      "_indicator1": "0",
+      "_indicator2": " ",
+      "_tag": "925"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "acquire"
+        },
+        {
+          "_code": "b",
+          "_data": "2 shelf copies"
+        },
+        {
+          "_code": "x",
+          "_data": "policy default"
+        }
+      ],
+      "_indicator1": "1",
+      "_indicator2": " ",
+      "_tag": "925"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "pc17 2012-05-11"
+        },
+        {
+          "_code": "b",
+          "_data": "xk07 2014-03-06 z-processor"
+        },
+        {
+          "_code": "i",
+          "_data": "xk07 2014-03-10 (telework) c.1 to CALM"
+        },
+        {
+          "_code": "t",
+          "_data": "rk08 2014-04-29 copy 2 added"
+        }
+      ],
+      "_indicator1": " ",
+      "_indicator2": " ",
+      "_tag": "955"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "  2012939473"
+        }
+      ],
+      "_indicator1": " ",
+      "_indicator2": " ",
+      "_tag": "010"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "016453435"
+        },
+        {
+          "_code": "2",
+          "_data": "Uk"
+        }
+      ],
+      "_indicator1": "7",
+      "_indicator2": " ",
+      "_tag": "016"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "0449810798"
+        }
+      ],
+      "_indicator1": " ",
+      "_indicator2": " ",
+      "_tag": "020"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "9780449810798"
+        }
+      ],
+      "_indicator1": " ",
+      "_indicator2": " ",
+      "_tag": "020"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "(OCoLC)ocn818318095"
+        }
+      ],
+      "_indicator1": " ",
+      "_indicator2": " ",
+      "_tag": "035"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "YDXCP"
+        },
+        {
+          "_code": "c",
+          "_data": "YDXCP"
+        },
+        {
+          "_code": "d",
+          "_data": "BTCTA"
+        },
+        {
+          "_code": "d",
+          "_data": "BDX"
+        },
+        {
+          "_code": "d",
+          "_data": "OCLCQ"
+        },
+        {
+          "_code": "d",
+          "_data": "UKMGB"
+        },
+        {
+          "_code": "d",
+          "_data": "IK2"
+        },
+        {
+          "_code": "d",
+          "_data": "IEP"
+        },
+        {
+          "_code": "d",
+          "_data": "UIU"
+        },
+        {
+          "_code": "d",
+          "_data": "CGP"
+        },
+        {
+          "_code": "d",
+          "_data": "FUG"
+        },
+        {
+          "_code": "d",
+          "_data": "OCLCF"
+        },
+        {
+          "_code": "d",
+          "_data": "DLC"
+        }
+      ],
+      "_indicator1": " ",
+      "_indicator2": " ",
+      "_tag": "040"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "lccopycat"
+        }
+      ],
+      "_indicator1": " ",
+      "_indicator2": " ",
+      "_tag": "042"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "PZ8.3.F642"
+        },
+        {
+          "_code": "b",
+          "_data": "Ro 2013"
+        }
+      ],
+      "_indicator1": "0",
+      "_indicator2": "0",
+      "_tag": "050"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "[E]"
+        },
+        {
+          "_code": "2",
+          "_data": "23"
+        }
+      ],
+      "_indicator1": "0",
+      "_indicator2": "4",
+      "_tag": "082"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "Fliess, Sue."
+        }
+      ],
+      "_indicator1": "1",
+      "_indicator2": " ",
+      "_tag": "100"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "Robots, robots everywhere! /"
+        },
+        {
+          "_code": "c",
+          "_data": "by Sue Fliess ; illustrated by Bob Staake."
+        }
+      ],
+      "_indicator1": "1",
+      "_indicator2": "0",
+      "_tag": "245"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "New York :"
+        },
+        {
+          "_code": "b",
+          "_data": "Golden Books,"
+        },
+        {
+          "_code": "c",
+          "_data": "c2013."
+        }
+      ],
+      "_indicator1": " ",
+      "_indicator2": " ",
+      "_tag": "260"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "1 v. (unpaged) :"
+        },
+        {
+          "_code": "b",
+          "_data": "col. ill. ;"
+        },
+        {
+          "_code": "c",
+          "_data": "21 cm."
+        }
+      ],
+      "_indicator1": " ",
+      "_indicator2": " ",
+      "_tag": "300"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "A little golden book"
+        }
+      ],
+      "_indicator1": "1",
+      "_indicator2": " ",
+      "_tag": "490"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "Rhyming text explains all the things robots do, from exploring other planets to milking cows."
+        }
+      ],
+      "_indicator1": " ",
+      "_indicator2": " ",
+      "_tag": "520"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "Robots"
+        },
+        {
+          "_code": "v",
+          "_data": "Juvenile fiction."
+        }
+      ],
+      "_indicator1": " ",
+      "_indicator2": "0",
+      "_tag": "650"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "Stories in rhyme."
+        }
+      ],
+      "_indicator1": " ",
+      "_indicator2": "0",
+      "_tag": "650"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "Picture books for children."
+        }
+      ],
+      "_indicator1": " ",
+      "_indicator2": "0",
+      "_tag": "650"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "Stories in rhyme."
+        }
+      ],
+      "_indicator1": " ",
+      "_indicator2": "1",
+      "_tag": "650"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "Staake, Bob,"
+        },
+        {
+          "_code": "d",
+          "_data": "1957-,"
+        },
+        {
+          "_code": "e",
+          "_data": "ill."
+        }
+      ],
+      "_indicator1": "1",
+      "_indicator2": " ",
+      "_tag": "700"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "a",
+          "_data": "Little golden books."
+        }
+      ],
+      "_indicator1": " ",
+      "_indicator2": "0",
+      "_tag": "830"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "3",
+          "_data": "Contributor biographical information"
+        },
+        {
+          "_code": "u",
+          "_data": "http://www.loc.gov/catdir/enhancements/fy1601/2012939473-b.html"
+        }
+      ],
+      "_indicator1": "4",
+      "_indicator2": "2",
+      "_tag": "856"
+    },
+    {
+      "_subfields": [
+        {
+          "_code": "3",
+          "_data": "Publisher description"
+        },
+        {
+          "_code": "u",
+          "_data": "http://www.loc.gov/catdir/enhancements/fy1601/2012939473-d.html"
+        }
+      ],
+      "_indicator1": "4",
+      "_indicator2": "2",
+      "_tag": "856"
+    }
+  ],
+  "_leader": {
+    "_recordLength": 1581,
+    "_recordStatus": "c",
+    "_typeOfRecord": "a",
+    "_implDefined1": "m ",
+    "_charCodingScheme": "a",
+    "_indicatorCount": 2,
+    "_subfieldCodeLength": 2,
+    "_baseAddressOfData": 385,
+    "_implDefined2": "7a ",
+    "_entryMap": "4500"
+  }
+}
