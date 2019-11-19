@@ -9,7 +9,7 @@
 
 To download and parse a MARC XML file from the LOC website, such as [https://lccn.loc.gov/2012939473/marcxml](https://lccn.loc.gov/2012939473/marcxml):
 
-    `node marc.js https://lccn.loc.gov/2012939473/marcxml`
+    node marc.js https://lccn.loc.gov/2012939473/marcxml
 
 Output:
 
@@ -29,21 +29,21 @@ Notes:
 
 The program doesn't save the file locally unless you *also* specify an output filename; e.g.:
 
-    `node marc.js https://lccn.loc.gov/2012939473/marcxml output/391520.mrc`
+    node marc.js https://lccn.loc.gov/2012939473/marcxml output/391520.mrc
 
 Alternatively, if you specify a barcode, an output file will be created using the barcode as the filename:
 
-    `node marc.js https://lccn.loc.gov/2012939473/marcxml --barcode=391520`
+    node marc.js https://lccn.loc.gov/2012939473/marcxml --barcode=391520
 
 And if you also want to view the contents of the entire MARC file, add `--text` to the command-line:
 
-    `node marc.js https://lccn.loc.gov/2012939473/marcxml --barcode=391520 --text`
+    node marc.js https://lccn.loc.gov/2012939473/marcxml --barcode=391520 --text
 
 ### Example 2
 
 To read a previously downloaded MRC file, display its contents as "text", and then save the updated tags as a new file:
 
-    `node marc.js input/391520.mrc --text output/391520.mrc`
+    node marc.js input/391520.mrc --text output/391520.mrc
 
 Output:
 
@@ -93,7 +93,7 @@ Output:
 
 To search the LOC website for an ISBN:
 
-    `node marc.js --isbn=9780449810798 --barcode=391520`
+    node marc.js --isbn=9780449810798 --barcode=391520
 
 Output:
 
