@@ -27,11 +27,11 @@ Output:
 
 Notes:
 
-If you want to save the MARC data in a local .mrc file, include an output filename on the command-line; e.g.:
+If you want to save the MARC data in a local .mrc file, include an output filename; e.g.:
 
     `node marc.js https://lccn.loc.gov/2012939473/marcxml output/391520.mrc`
 
-Alternatively, if specify a barcode on the command, an output file will be created using the barcode as the filename:
+Alternatively, if you specify a barcode, an output file will be created using the barcode as the filename:
 
     `node marc.js https://lccn.loc.gov/2012939473/marcxml --barcode=391520`
 
@@ -123,11 +123,11 @@ you'll see something else, such as:
 
 or even a `System Error 404`.  In the case of a 404 error, try the command again, because the LOC web server
 can be a bit finnicky, perhaps because the program is issuing requests too fast.  Note that each ISBN request
-simulates what you would typically do from a web browser; i.e.:
+simulates what you would typically do in a web browser; i.e.:
 
  1. Go to [https://catalog.loc.gov/vwebv/searchAdvanced](https://catalog.loc.gov/vwebv/searchAdvanced)
  2. Enter an ISBN
  3. Select "LCCN-ISBN-ISSN (KNUM)"
  4. Click Search
  5. If a record is found, click "Save Record"
- 6. Click "Save" to download an .mrc file
+ 6. Click "Save" to download the record as an .mrc file
