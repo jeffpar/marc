@@ -1,12 +1,23 @@
 ## MARC Experiments
 
-### Setup
+### Quick Setup
 
  1. Install [node with npm](https://nodejs.org/en/) and [git](https://git-scm.com/downloads)
  2. Clone the project: `git clone https://github.com/jeffpar/marc.git`
  3. `cd` into your new `marc` directory and run `npm install`
  4. Test it: `node marc.js` should print `nothing to do`
 
+### Installing Node on Windows (The Hard Way)
+
+When you don't have Administrator privileges:
+
+ 1. From a CMD prompt, make a `nodejs` directory in `C:\ProgramData\Applications` (`mkdir nodejs`)
+ 2. From [https://nodejs.org/dist/v12.13.1/win-x64/](https://nodejs.org/dist/v12.13.1/win-x64/), download `node.exe` into `C:\ProgramData\Applications\nodejs`
+ 3. In Control Panel, search for "Environment", click "Edit environment variables for your account", select Path, click New, and add **C:\ProgramData\Applications\nodejs**
+ 4. Download [https://registry.npmjs.org/npm/-/npm-6.13.1.tgz](https://registry.npmjs.org/npm/-/npm-6.13.1.tgz) and unpack it with a free tool like ZipExtractor into `C:\ProgramData\Applications\npm-6.13.1`
+ 5. From a CMD prompt, in the `C:\ProgramData\Applications\npm-6.13.1\package` directory, run `node bin/npm-cli.js install npm -gf`
+ 6. Verify that `node -v` and `npm -v` display their respective version numbers
+ 
 ### Example 1
 
 To download and parse a MARC XML file from the LOC website, such as [https://lccn.loc.gov/2012939473/marcxml](https://lccn.loc.gov/2012939473/marcxml):
