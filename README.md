@@ -2,7 +2,7 @@
 
 ### Setup
 
- 1. Install node and npm
+ 1. Install [node with npm](https://nodejs.org/en/)
  2. Run `npm install`
 
 ### Example 1
@@ -27,7 +27,7 @@ Output:
 
 Notes:
 
-If you want to save the MARC data in a local .mrc file, include an output filename; e.g.:
+The program doesn't save the file locally unless you *also* specify an output filename; e.g.:
 
     `node marc.js https://lccn.loc.gov/2012939473/marcxml output/391520.mrc`
 
