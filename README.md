@@ -3,7 +3,9 @@
 ### Setup
 
  1. Install [node with npm](https://nodejs.org/en/)
- 2. Run `npm install`
+ 2. Clone the project: `git clone https://github.com/jeffpar/marc.git`
+ 3. `cd` into your new `marc` directory and run `npm install`
+ 4. Test it: `node marc.js` should print `nothing to do`
 
 ### Example 1
 
