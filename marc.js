@@ -72,172 +72,174 @@ function tweakMARC(records, outputFile)
 {
     let modified = false;
 
-    records.forEach((rec) => {
-        let tagCurrent;
-        let dataField, iLastDataField = -1;
+    if (!args['notweak']) {
+        records.forEach((rec) => {
+            let tagCurrent;
+            let dataField, iLastDataField = -1;
 
-        let findDataField = function(tag, iLast = -1) {
-            let dataFields = rec._dataFields;
-            for (let i = iLast+1; i < dataFields.length; i++) {
-                let dataField = dataFields[i];
-                if (+dataField._tag == tag) {
-                    tagCurrent = dataField._tag;
-                    iLastDataField = i;
-                    return dataField;
+            let findDataField = function(tag, iLast = -1) {
+                let dataFields = rec._dataFields;
+                for (let i = iLast+1; i < dataFields.length; i++) {
+                    let dataField = dataFields[i];
+                    if (+dataField._tag == tag) {
+                        tagCurrent = dataField._tag;
+                        iLastDataField = i;
+                        return dataField;
+                    }
                 }
-            }
-            iLastDataField = -1;
-            return null;
-        };
-
-        let removeDataField = function(subField) {
-            let dataFields = rec._dataFields;
-            if (iLastDataField >= 0) {
-                displaySubField(subField, "del");
-                dataFields.splice(iLastDataField, 1);
                 iLastDataField = -1;
-                modified = true;
-            }
-        };
+                return null;
+            };
 
-        let addSubField = function(dataField, code, text) {
-            if (dataField && !findSubField(dataField, code)) {
-                let subField = {_code: code, _data: text};
-                dataField._subfields.push(subField);
-                displaySubField(subField, "add");
-                modified = true;
-                return true;
-            }
-            return false;
-        };
+            let removeDataField = function(subField) {
+                let dataFields = rec._dataFields;
+                if (iLastDataField >= 0) {
+                    displaySubField(subField, "del");
+                    dataFields.splice(iLastDataField, 1);
+                    iLastDataField = -1;
+                    modified = true;
+                }
+            };
 
-        let displaySubField = function(subField, op = "sav") {
-            console.log('tag ' + tagCurrent + ' ' + op + ' subField "' + subField._code + '": "' + subField._data + '"');
-        };
+            let addSubField = function(dataField, code, text) {
+                if (dataField && !findSubField(dataField, code)) {
+                    let subField = {_code: code, _data: text};
+                    dataField._subfields.push(subField);
+                    displaySubField(subField, "add");
+                    modified = true;
+                    return true;
+                }
+                return false;
+            };
 
-        let findSubField = function(dataField, code) {
-            if (dataField) {
-                let subFields = dataField._subfields;
-                for (let i = 0; i < subFields.length; i++) {
-                    let subField = subFields[i];
-                    if (subField._code == code) {
-                        return subField;
+            let displaySubField = function(subField, op = "sav") {
+                console.log('tag ' + tagCurrent + ' ' + op + ' subField "' + subField._code + '": "' + subField._data + '"');
+            };
+
+            let findSubField = function(dataField, code) {
+                if (dataField) {
+                    let subFields = dataField._subfields;
+                    for (let i = 0; i < subFields.length; i++) {
+                        let subField = subFields[i];
+                        if (subField._code == code) {
+                            return subField;
+                        }
                     }
                 }
-            }
-            return null;
-        };
+                return null;
+            };
 
-        let removeTrailingPunctuation = function(subField) {
-            if (subField) {
-                let match = subField._data.match(/^(.*?)\s*[/,.:;]$/);
-                if (match) {
-                    if (replaceSubField(subField, match[1])) {
-                        return true;
+            let removeTrailingPunctuation = function(subField) {
+                if (subField) {
+                    let match = subField._data.match(/^(.*?)\s*[/,.:;]$/);
+                    if (match) {
+                        if (replaceSubField(subField, match[1])) {
+                            return true;
+                        }
                     }
                 }
-            }
-            return false;
-        };
+                return false;
+            };
 
-        let removeTrailingPages = function(subField) {
-            if (subField) {
-                let match = subField._data.match(/^(.*?)\s*(pages|p\.)$/);
-                if (match) {
-                    if (replaceSubField(subField, match[1])) {
-                        return match[2];
+            let removeTrailingPages = function(subField) {
+                if (subField) {
+                    let match = subField._data.match(/^(.*?)\s*(pages|p\.)$/);
+                    if (match) {
+                        if (replaceSubField(subField, match[1])) {
+                            return match[2];
+                        }
                     }
                 }
-            }
-            return null;
-        };
-        
-        let replaceSubField = function(subField, text) {
-            if (subField._data != text) {
-                displaySubField(subField, "old");
-                subField._data = text;
-                displaySubField(subField, "new");
-                modified = true;
-                return true;
-            }
-            displaySubField(subField);
-            return false;
-        };
-
-        /*
-         * Each dataField object has the following keys:
-         *
-         *      _tag
-         *      _indicator1
-         *      _indicator2
-         *      _subfields
-         * 
-         * Let's start by removing unwanted trailing punctuation in subfields "a" (Title),
-         * "b" (Remainder), and "c" (Statement of Responsibility) in tag "245".  Note: this is
-         * a non-repeatable (NR) tag.
-         * 
-         * https://www.oclc.org/bibformats/en/2xx/245.html
-         */
-        dataField = findDataField(245);
-        removeTrailingPunctuation(findSubField(dataField, "a"));
-        removeTrailingPunctuation(findSubField(dataField, "b"));
-        removeTrailingPunctuation(findSubField(dataField, "c"));
-
-        /*
-         * Next, try moving "p." or "pages" from subfield "a" (Extent) to subfield "f" (Type of Unit)
-         * in tag "300". Note: this is an repeatable (R) tag.
-         * 
-         * https://www.oclc.org/bibformats/en/3xx/300.html
-         */
-        while (dataField = findDataField(300, iLastDataField)) {
-            let subFieldF = findSubField(dataField, "f");
-            if (!subFieldF) {
-                let subFieldA = findSubField(dataField, "a");
-                removeTrailingPunctuation(subFieldA);
-                let text = removeTrailingPages(subFieldA);
-                if (text) {
-                    addSubField(dataField, "f", "pages");
+                return null;
+            };
+            
+            let replaceSubField = function(subField, text) {
+                if (subField._data != text) {
+                    displaySubField(subField, "old");
+                    subField._data = text;
+                    displaySubField(subField, "new");
+                    modified = true;
+                    return true;
                 }
-            }
-        }
+                displaySubField(subField);
+                return false;
+            };
 
-        /*
-         * Next, if an ISBN was specified, look for a matching subfield "a" of all "020" tags
-         * and remove any tags that don't match the ISBN.
-         * 
-         * https://www.oclc.org/bibformats/en/0xx/020.html
-         */
-        if (args['isbn']) {
-            let cRemoved = 0, cRetained = 0;
-            while (dataField = findDataField(20, iLastDataField)) {
-                let subFieldA = findSubField(dataField, "a"); 
-                if (subFieldA) {
-                    if (subFieldA._data == args['isbn']) {
-                        displaySubField(subFieldA);
-                        cRetained++;
-                    } else {
-                        removeDataField(subFieldA);
-                        cRemoved++;
+            /*
+            * Each dataField object has the following keys:
+            *
+            *      _tag
+            *      _indicator1
+            *      _indicator2
+            *      _subfields
+            * 
+            * Let's start by removing unwanted trailing punctuation in subfields "a" (Title),
+            * "b" (Remainder), and "c" (Statement of Responsibility) in tag "245".  Note: this is
+            * a non-repeatable (NR) tag.
+            * 
+            * https://www.oclc.org/bibformats/en/2xx/245.html
+            */
+            dataField = findDataField(245);
+            removeTrailingPunctuation(findSubField(dataField, "a"));
+            removeTrailingPunctuation(findSubField(dataField, "b"));
+            removeTrailingPunctuation(findSubField(dataField, "c"));
+
+            /*
+            * Next, try moving "p." or "pages" from subfield "a" (Extent) to subfield "f" (Type of Unit)
+            * in tag "300". Note: this is an repeatable (R) tag.
+            * 
+            * https://www.oclc.org/bibformats/en/3xx/300.html
+            */
+            // while (dataField = findDataField(300, iLastDataField)) {
+            //     let subFieldF = findSubField(dataField, "f");
+            //     if (!subFieldF) {
+            //         let subFieldA = findSubField(dataField, "a");
+            //         removeTrailingPunctuation(subFieldA);
+            //         let text = removeTrailingPages(subFieldA);
+            //         if (text) {
+            //             addSubField(dataField, "f", "pages");
+            //         }
+            //     }
+            // }
+
+            /*
+            * Next, if an ISBN was specified, look for a matching subfield "a" of all "020" tags
+            * and remove any tags that don't match the ISBN.
+            * 
+            * https://www.oclc.org/bibformats/en/0xx/020.html
+            */
+            if (args['isbn']) {
+                let cRemoved = 0, cRetained = 0;
+                while (dataField = findDataField(20, iLastDataField)) {
+                    let subFieldA = findSubField(dataField, "a"); 
+                    if (subFieldA) {
+                        if (subFieldA._data == args['isbn']) {
+                            displaySubField(subFieldA);
+                            cRetained++;
+                        } else {
+                            removeDataField(subFieldA);
+                            cRemoved++;
+                        }
                     }
                 }
-            }
-            if (cRemoved && !cRetained) {
-                console.log("warning: no ISBN records retained");
-            }
-        }
-    });
-
-    if (modified) {
-        if (outputFile) {
-            marc4js.transform(records, {}, function(err, data) {
-                if (err) throw err;
-                if (!fs.existsSync(outputFile)) {
-                    fs.writeFileSync(outputFile, data);
-                } else {
-                    console.log(outputFile + " already exists");
+                if (cRemoved && !cRetained) {
+                    console.log("warning: no ISBN records retained");
                 }
-            });
-        } else {
+            }
+        });
+    }
+
+    if (outputFile) {
+        marc4js.transform(records, {}, function(err, data) {
+            if (err) throw err;
+            if (!fs.existsSync(outputFile)) {
+                fs.writeFileSync(outputFile, data);
+            } else {
+                console.log(outputFile + " already exists");
+            }
+        });
+    } else {
+        if (modified) {
             console.log("specify an output file to save modifications");
         }
     }
@@ -339,13 +341,15 @@ function main(args)
 let args = {};
 for (let i = 2; i < process.argv.length; i++) {
     let arg = process.argv[i];
-    if (arg.indexOf('--') == 0) {
+    if (arg.indexOf('--') == 0) { 
         arg = arg.substr(2);
         let parts = arg.split('=');
         let value = true;
         arg = parts[0];
         if (parts.length > 1) {
             value = parts[1];
+        } else if (arg == "text" || arg == "json" || arg == "verbose" || arg == "notweak") {
+            value = true;
         } else {
             value = process.argv[++i];
         }
@@ -357,7 +361,7 @@ for (let i = 2; i < process.argv.length; i++) {
         args[arg] = value;
         continue;
     }
-    if (!args['input']) {
+    if (!args['input'] && !args['isbn']) {
         args['input'] = arg;
         continue;
     }
