@@ -47,13 +47,13 @@ function parseMARC(data, format, outputFile)
         if (err) throw err;
         console.log("read " + records.length + " record" + (records.length != 1? "s" : ""));
 
-        if (args['json']) {
+        if (argv['json']) {
             records.forEach((rec) => console.log(JSON.stringify(rec, null, 2)));
         }
-        if (args['text']) {
+        if (argv['text'] || !outputFile) {
             marc4js.transform(records, {toFormat: "text"}, function(err, data) {
                 if (err) throw err;
-                console.log(data);
+                console.log(data.trim());
                 tweakMARC(records, outputFile);
             });
             return;
@@ -70,9 +70,9 @@ function parseMARC(data, format, outputFile)
  */
 function tweakMARC(records, outputFile)
 {
-    let modified = false;
-
-    if (!args['notweak']) {
+    let tweaked = false;
+    if (!argv['skip']) {
+        console.log("tweaks:");
         records.forEach((rec) => {
             let tagCurrent;
             let dataField, iLastDataField = -1;
@@ -97,16 +97,16 @@ function tweakMARC(records, outputFile)
                     displaySubField(subField, "del");
                     dataFields.splice(iLastDataField, 1);
                     iLastDataField = -1;
-                    modified = true;
+                    tweaked = true;
                 }
             };
 
             let addSubField = function(dataField, code, text) {
                 if (dataField && !findSubField(dataField, code)) {
-                    let subField = {_code: code, _data: text};
+                    let subField = new marc4js.marc.Subfield(code, text);
                     dataField._subfields.push(subField);
                     displaySubField(subField, "add");
-                    modified = true;
+                    tweaked = true;
                     return true;
                 }
                 return false;
@@ -158,7 +158,7 @@ function tweakMARC(records, outputFile)
                     displaySubField(subField, "old");
                     subField._data = text;
                     displaySubField(subField, "new");
-                    modified = true;
+                    tweaked = true;
                     return true;
                 }
                 displaySubField(subField);
@@ -174,8 +174,8 @@ function tweakMARC(records, outputFile)
             *      _subfields
             * 
             * Let's start by removing unwanted trailing punctuation in subfields "a" (Title),
-            * "b" (Remainder), and "c" (Statement of Responsibility) in tag "245".  Note: this is
-            * a non-repeatable (NR) tag.
+            * "b" (Remainder), and "c" (Statement of Responsibility) in tag "245" (Title Statement).
+            * Note: this is a non-repeatable (NR) tag.
             * 
             * https://www.oclc.org/bibformats/en/2xx/245.html
             */
@@ -186,34 +186,34 @@ function tweakMARC(records, outputFile)
 
             /*
             * Next, try moving "p." or "pages" from subfield "a" (Extent) to subfield "f" (Type of Unit)
-            * in tag "300". Note: this is an repeatable (R) tag.
+            * in tag "300" (Physical Description). Note: this is a repeatable (R) tag.
             * 
             * https://www.oclc.org/bibformats/en/3xx/300.html
             */
-            // while (dataField = findDataField(300, iLastDataField)) {
-            //     let subFieldF = findSubField(dataField, "f");
-            //     if (!subFieldF) {
-            //         let subFieldA = findSubField(dataField, "a");
-            //         removeTrailingPunctuation(subFieldA);
-            //         let text = removeTrailingPages(subFieldA);
-            //         if (text) {
-            //             addSubField(dataField, "f", "pages");
-            //         }
-            //     }
-            // }
+            while (dataField = findDataField(300, iLastDataField)) {
+                let subFieldF = findSubField(dataField, "f");
+                if (!subFieldF) {
+                    let subFieldA = findSubField(dataField, "a");
+                    removeTrailingPunctuation(subFieldA);
+                    let text = removeTrailingPages(subFieldA);
+                    if (text) {
+                        addSubField(dataField, "f", "pages");
+                    }
+                }
+            }
 
             /*
             * Next, if an ISBN was specified, look for a matching subfield "a" of all "020" tags
-            * and remove any tags that don't match the ISBN.
+            * (International Standard Book Number) and remove any tags that don't match the ISBN.
             * 
             * https://www.oclc.org/bibformats/en/0xx/020.html
             */
-            if (args['isbn']) {
+            if (argv['isbn']) {
                 let cRemoved = 0, cRetained = 0;
                 while (dataField = findDataField(20, iLastDataField)) {
                     let subFieldA = findSubField(dataField, "a"); 
                     if (subFieldA) {
-                        if (subFieldA._data == args['isbn']) {
+                        if (subFieldA._data.indexOf(argv['isbn']) == 0) {
                             displaySubField(subFieldA);
                             cRetained++;
                         } else {
@@ -225,6 +225,16 @@ function tweakMARC(records, outputFile)
                 if (cRemoved && !cRetained) {
                     console.log("warning: no ISBN records retained");
                 }
+            } else {
+                /*
+                 * Otherwise, just display any and all ISBN numbers that are being retained.
+                 */
+                while (dataField = findDataField(20, iLastDataField)) {
+                    let subFieldA = findSubField(dataField, "a"); 
+                    if (subFieldA) {
+                        displaySubField(subFieldA);
+                    }
+                }
             }
         });
     }
@@ -232,30 +242,28 @@ function tweakMARC(records, outputFile)
     if (outputFile) {
         marc4js.transform(records, {}, function(err, data) {
             if (err) throw err;
-            if (!fs.existsSync(outputFile)) {
+            if (argv['overwrite'] || !fs.existsSync(outputFile)) {
                 fs.writeFileSync(outputFile, data);
             } else {
-                console.log(outputFile + " already exists");
+                console.log(outputFile + " already exists, use --overwrite if desired");
             }
         });
     } else {
-        if (modified) {
-            console.log("specify an output file to save modifications");
+        if (tweaked) {
+            console.log("specify an output file to save the above tweaks");
         }
     }
 }
 
 /**
- * main(args)
- *
- * @param {Object} args
+ * main()
  */
-function main(args)
+function main()
 {
     try {
-        let inputFile = args['input'];
-        let barcode = args['barcode'];
-        let outputFile = args['output'] || (barcode? "output/" + barcode + ".mrc" : "");
+        let inputFile = argv['input'];
+        let barcode = argv['barcode'];
+        let outputFile = argv['output'] || (barcode? "output/" + barcode + ".mrc" : "");
 
         if (inputFile) {
             /*
@@ -301,18 +309,36 @@ function main(args)
             return;
         }
         /*
-         * No input file was specified, so if an ISBN was specified, search for it.
+         * No input file was specified, so if an LCCN or ISBN was specified, search for it.
          */
-        if (args['isbn']) {
+        let type;
+        if (argv[type = 'lccn'] || argv[type = 'isbn']) {
             let jar = request.jar();
             let requestWithCookies = request.defaults({jar});
             let urlQuery = "https://catalog.loc.gov/vwebv/searchAdvanced";
             console.log("requestURL(" + urlQuery + ")");
             requestWithCookies(urlQuery, function (error, response, body) {
                 if (error) throw error;
-                let urlSearch = "https://catalog.loc.gov/vwebv/search?searchArg1=$ISBN&argType1=all&searchCode1=KNUM&searchType=2&combine2=and&searchArg2=&argType2=all&searchCode2=GKEY&combine3=and&searchArg3=&argType3=all&searchCode3=GKEY&year=1519-2019&fromYear=&toYear=&location=all&place=all&type=all&language=all&recCount=25";
-                urlSearch = urlSearch.replace(/\$ISBN/g, args['isbn']);
-                console.log("requestURL(" + urlSearch + ")");
+                let codes = {
+                    "isbn": "KNUM",
+                    "lccn": "K010"
+                }
+                let arg = argv[type];
+                if (type == "lccn") {
+                    let parts = arg.split('-');
+                    if (parts.length > 1) {
+                        if (parts[0].length == 2 || parts[0].length == 4) {
+                            while (parts[1].length < 6) {
+                                parts[1] = '0' + parts[1];
+                            }
+                        }
+                        arg = parts[0] + parts[1];
+                    }
+                }
+                let urlSearch = "https://catalog.loc.gov/vwebv/search?searchArg1=$ARG&argType1=all&searchCode1=$CODE&searchType=2&combine2=and&searchArg2=&argType2=all&searchCode2=GKEY&combine3=and&searchArg3=&argType3=all&searchCode3=GKEY&year=1519-2019&fromYear=&toYear=&location=all&place=all&type=all&language=all&recCount=25";
+                urlSearch = urlSearch.replace(/\$ARG/g, arg);
+                urlSearch = urlSearch.replace(/\$CODE/g, codes[type]);
+                if (argv['verbose']) console.log("requestURL(" + urlSearch + ")");
                 requestWithCookies(urlSearch, function (error, response, body) {
                     if (error) throw error;
                     let match = body.match(/<title>([^<]*)<\/title>/);
@@ -323,7 +349,7 @@ function main(args)
                         console.log("found marcxml url: " + urlMARC);
                         requestWithCookies(urlMARC, function (error, response, body) {
                             if (error) throw error;
-                            if (args['verbose']) console.log(body);
+                            if (argv['verbose']) console.log(body);
                             parseMARC(body, "marcxml", outputFile);
                         });
                     }
@@ -338,7 +364,7 @@ function main(args)
     }
 }
 
-let args = {};
+let argv = {}, argc = 0, booleans = ["text", "json", "skip", "overwrite", "verbose"];
 for (let i = 2; i < process.argv.length; i++) {
     let arg = process.argv[i];
     if (arg.indexOf('--') == 0) { 
@@ -348,34 +374,54 @@ for (let i = 2; i < process.argv.length; i++) {
         arg = parts[0];
         if (parts.length > 1) {
             value = parts[1];
-        } else if (arg == "text" || arg == "json" || arg == "verbose" || arg == "notweak") {
+        } else if (booleans.indexOf(arg) >= 0) {
             value = true;
         } else {
             value = process.argv[++i];
         }
-        if (args[arg] != undefined) {
+        if (argv[arg] != undefined) {
             console.log("too many '" + arg + "' arguments");
-            args = null;
+            argc = 0;
             break;
         }
-        args[arg] = value;
+        argv[arg] = value;
+        argc++;
         continue;
     }
-    if (!args['input'] && !args['isbn']) {
-        args['input'] = arg;
+    if (!argv['input'] && !argv['isbn'] && !argv['lccn']) {
+        argv['input'] = arg;
+        argc++;
         continue;
     }
-    if (!args['output']) {
-        args['output'] = arg;
+    if (!argv['output']) {
+        argv['output'] = arg;
+        argc++;
         continue;
     }
-    args = null;
+    argc = 0;
     break;
 }
 
-if (!args) {
-    console.log("usage: node marc.js [input file] [output file]");
+if (!argc) {
+    let help = [
+        "Usage:",
+        "\tnode marc.js [options] [input file] [output file]",
+        "",
+        "Options:",
+        "\t--isbn [number] to search LOC for an ISBN",
+        "\t--lccn [number] to search LOC for an LCCN",
+        "\t--text to display the MARC record(s) in text form",
+        "\t--json to display the MARC record(s) in JSON form",
+        "\t--skip to skip any modifications to MARC record(s)",
+        "\t--overwrite to overwrite an existing output file",
+        "",
+        "The input file may be the URL of a MARC file or a local .txt, .mrc, or .xml file;",
+        "or you can initiate a search for a MARC file by ISBN or LCCN with --isbn or --lccn.",
+        "",
+        "If no output file is specified, any MARC records found will be displayed in text form."
+    ];
+    help.forEach((s) => {console.log(s)});
     process.exit(1);
 }
 
-main(args);
+main(argv);
