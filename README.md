@@ -84,17 +84,17 @@ The program doesn't save the file locally unless you *also* specify an output fi
 
 Alternatively, if you specify a barcode, an output file will be created using the barcode as the filename:
 
-    marc https://lccn.loc.gov/2012939473/marcxml --barcode 391520
+    marc https://lccn.loc.gov/2012939473/marcxml barcode:391520
 
-And if you also want to view the contents of the entire MARC file, add `--text` to the command-line:
+And if you also want to view the contents of the entire MARC file, add `text` to the command-line:
 
-    marc https://lccn.loc.gov/2012939473/marcxml --barcode 391520 --text
+    marc https://lccn.loc.gov/2012939473/marcxml barcode:391520 text
 
 ### Example 2
 
 To read a previously downloaded MRC file, display its contents as "text", and then save the updated tags as a new file:
 
-    marc input/391520.mrc --text output/391520.mrc
+    marc input/391520.mrc text output/391520.mrc
 
 Output:
 
@@ -144,7 +144,7 @@ Output:
 
 To search the LOC website for an ISBN:
 
-    marc --isbn 9780449810798 --barcode 391520
+    marc isbn:9780449810798 barcode:391520
 
 Output:
 
@@ -186,7 +186,7 @@ simulates what you would typically do in a web browser; i.e.:
 
 To search the LOC website by LCCN (Library of Congress Catalog/Control Number):
 
-    marc --lccn 2014397535 --isbn 0062287516
+    marc lccn:2014397535 isbn:0062287516
 
 Output:
 

@@ -1,0 +1,40 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "marc.js ISBN",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeArgs": [
+                "--tls-min-v1.0"
+            ],
+            "program": "${workspaceFolder}\\marc.js",
+            "args": [
+                "--isbn=1572315105",
+                "--barcode=168177"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "marc.js MARCXML",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeArgs": [
+                "--tls-min-v1.0"
+            ],
+            "program": "${workspaceFolder}\\marc.js",
+            "args": [
+                "https://lccn.loc.gov/2012939473/marcxml",
+                "--text"
+            ]
+        }
+    ]
+}

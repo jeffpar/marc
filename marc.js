@@ -245,7 +245,7 @@ function tweakMARC(records, outputFile)
             if (argv['overwrite'] || !fs.existsSync(outputFile)) {
                 fs.writeFileSync(outputFile, data);
             } else {
-                console.log(outputFile + " already exists, use --overwrite if desired");
+                console.log(outputFile + " already exists, use overwrite option if desired");
             }
         });
     } else {
@@ -367,24 +367,21 @@ function main()
 let argv = {}, argc = 0, booleans = ["text", "json", "skip", "overwrite", "verbose"];
 for (let i = 2; i < process.argv.length; i++) {
     let arg = process.argv[i];
-    if (arg.indexOf('--') == 0) { 
-        arg = arg.substr(2);
-        let parts = arg.split('=');
-        let value = true;
+    if (arg.indexOf(':') > 0 && arg.indexOf("/") < 0) {
+        let parts = arg.split(':');
         arg = parts[0];
-        if (parts.length > 1) {
-            value = parts[1];
-        } else if (booleans.indexOf(arg) >= 0) {
-            value = true;
-        } else {
-            value = process.argv[++i];
-        }
+        let value = parts[1];
         if (argv[arg] != undefined) {
             console.log("too many '" + arg + "' arguments");
             argc = 0;
             break;
         }
         argv[arg] = value;
+        argc++;
+        continue;
+    }
+    if (booleans.indexOf(arg) >= 0) {
+        argv[arg] = true;
         argc++;
         continue;
     }
@@ -405,18 +402,20 @@ for (let i = 2; i < process.argv.length; i++) {
 if (!argc) {
     let help = [
         "Usage:",
-        "\tnode marc.js [options] [input file] [output file]",
+        "\tnode marc.js [input file] [output file] [options]",
         "",
-        "Options:",
-        "\t--isbn [number] to search LOC for an ISBN",
-        "\t--lccn [number] to search LOC for an LCCN",
-        "\t--text to display the MARC record(s) in text form",
-        "\t--json to display the MARC record(s) in JSON form",
-        "\t--skip to skip any modifications to MARC record(s)",
-        "\t--overwrite to overwrite an existing output file",
+        "Input options:",
+        "\tisbn:[number] to search LOC for an ISBN",
+        "\tlccn:[number] to search LOC for an LCCN",
+        "",
+        "Program options:",
+        "\ttext: display the MARC record(s) in text form",
+        "\tjson: display the MARC record(s) in JSON form",
+        "\tskip: skip any modifications to MARC record(s)",
+        "\toverwrite: overwrite an existing output file",
         "",
         "The input file may be the URL of a MARC file or a local .txt, .mrc, or .xml file;",
-        "or you can initiate a search for a MARC file by ISBN or LCCN with --isbn or --lccn.",
+        "or you can initiate a search for a MARC file by ISBN or LCCN.",
         "",
         "If no output file is specified, any MARC records found will be displayed in text form."
     ];
