@@ -94,7 +94,7 @@ And if you also want to view the contents of the entire MARC file, add `text` to
 
 To read a previously downloaded MRC file, display its contents as "text", and then save the updated tags as a new file:
 
-    marc input/391520.mrc text output/391520.mrc
+    marc input/391520.mrc output/391520.mrc text
 
 Output:
 

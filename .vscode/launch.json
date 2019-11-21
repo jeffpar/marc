@@ -14,10 +14,47 @@
             "runtimeArgs": [
                 "--tls-min-v1.0"
             ],
-            "program": "${workspaceFolder}\\marc.js",
+            "program": "${workspaceFolder}/marc.js",
             "args": [
-                "--isbn=1572315105",
-                "--barcode=168177"
+                "isbn:1572315105",
+                "barcode:168177"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "marc.js LCCN",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeArgs": [
+                "--tls-min-v1.0"
+            ],
+            "program": "${workspaceFolder}/marc.js",
+            "args": [
+                "lccn:2014397535",
+                "isbn:0062287516",
+                "barcode:123456"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "marc.js LCCN (Old)",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeArgs": [
+                "--tls-min-v1.0"
+            ],
+            "program": "${workspaceFolder}/marc.js",
+            "args": [
+                "--lccn",
+                "2014397535",
+                "--isbn",
+                "0062287516",
+                "--barcode",
+                "123456"
             ]
         },
         {
@@ -30,7 +67,7 @@
             "runtimeArgs": [
                 "--tls-min-v1.0"
             ],
-            "program": "${workspaceFolder}\\marc.js",
+            "program": "${workspaceFolder}/marc.js",
             "args": [
                 "https://lccn.loc.gov/2012939473/marcxml",
                 "--text"

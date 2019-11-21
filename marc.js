@@ -42,17 +42,23 @@ function parseMARC(data, format, outputFile)
 {
     console.log("parsing MARC as '" + format + "'");
 
-    marc4js.parse(data, {fromFormat: format}, function(err, records) {
+    marc4js.parse(data, {fromFormat: format}, function(error, records) {
 
-        if (err) throw err;
+        if (error) {
+            console.log(error.message);
+            return;
+        }
         console.log("read " + records.length + " record" + (records.length != 1? "s" : ""));
 
         if (argv['json']) {
             records.forEach((rec) => console.log(JSON.stringify(rec, null, 2)));
         }
         if (argv['text'] || !outputFile) {
-            marc4js.transform(records, {toFormat: "text"}, function(err, data) {
-                if (err) throw err;
+            marc4js.transform(records, {toFormat: "text"}, function(error, data) {
+                if (error) {
+                    console.log(error.message);
+                    return;
+                }
                 console.log(data.trim());
                 tweakMARC(records, outputFile);
             });
@@ -240,8 +246,11 @@ function tweakMARC(records, outputFile)
     }
 
     if (outputFile) {
-        marc4js.transform(records, {}, function(err, data) {
-            if (err) throw err;
+        marc4js.transform(records, {}, function(error, data) {
+            if (error) {
+                console.log(error.message);
+                return;
+            }
             if (argv['overwrite'] || !fs.existsSync(outputFile)) {
                 fs.writeFileSync(outputFile, data);
             } else {
@@ -290,7 +299,10 @@ function main()
              * Example: https://seattle.bibliocommons.com/item/catalogue_info/3138656030
              */
             fs.readFile(inputFile, function(error, data) {
-                if (error) throw error;
+                if (error) {
+                    console.log(error.message);
+                    return;
+                }
                 let format;
                 if (inputFile.indexOf(".txt") > 0) {
                     format = "text";
@@ -313,17 +325,21 @@ function main()
          */
         let type;
         if (argv[type = 'lccn'] || argv[type = 'isbn']) {
+            let arg = argv[type];
+            console.log("search for " + type + ": " + arg);
             let jar = request.jar();
             let requestWithCookies = request.defaults({jar});
             let urlQuery = "https://catalog.loc.gov/vwebv/searchAdvanced";
             console.log("requestURL(" + urlQuery + ")");
             requestWithCookies(urlQuery, function (error, response, body) {
-                if (error) throw error;
+                if (error) {
+                    console.log(error.message);
+                    return;
+                }
                 let codes = {
                     "isbn": "KNUM",
                     "lccn": "K010"
                 }
-                let arg = argv[type];
                 if (type == "lccn") {
                     let parts = arg.split('-');
                     if (parts.length > 1) {
@@ -340,7 +356,10 @@ function main()
                 urlSearch = urlSearch.replace(/\$CODE/g, codes[type]);
                 if (argv['verbose']) console.log("requestURL(" + urlSearch + ")");
                 requestWithCookies(urlSearch, function (error, response, body) {
-                    if (error) throw error;
+                    if (error) {
+                        console.log(error.message);
+                        return;
+                    }
                     let match = body.match(/<title>([^<]*)<\/title>/);
                     if (match) console.log("title of search results: " + match[1]);
                     match = body.match(/<a.*?title="MARCXML version of this record".*?href="([^"]*)".*?>/);
@@ -348,7 +367,10 @@ function main()
                         let urlMARC = match[1];
                         console.log("found marcxml url: " + urlMARC);
                         requestWithCookies(urlMARC, function (error, response, body) {
-                            if (error) throw error;
+                            if (error) {
+                                console.log(error.message);
+                                return;
+                            }
                             if (argv['verbose']) console.log(body);
                             parseMARC(body, "marcxml", outputFile);
                         });
@@ -364,15 +386,22 @@ function main()
     }
 }
 
-let argv = {}, argc = 0, booleans = ["text", "json", "skip", "overwrite", "verbose"];
+let argv = {}, argc = 0;
+let searches = ["lccn", "isbn", "barcode"];
+let booleans = ["text", "json", "skip", "overwrite", "verbose"];
 for (let i = 2; i < process.argv.length; i++) {
     let arg = process.argv[i];
+    if (arg.indexOf("--") == 0) arg = arg.substr(2);
+    arg = arg.replace('=', ':');
+    if (searches.indexOf(arg) >= 0) {
+        arg += ":" + process.argv[++i];
+    }
     if (arg.indexOf(':') > 0 && arg.indexOf("/") < 0) {
         let parts = arg.split(':');
         arg = parts[0];
         let value = parts[1];
         if (argv[arg] != undefined) {
-            console.log("too many '" + arg + "' arguments");
+            console.log("too many " + arg + " arguments");
             argc = 0;
             break;
         }
@@ -402,7 +431,7 @@ for (let i = 2; i < process.argv.length; i++) {
 if (!argc) {
     let help = [
         "Usage:",
-        "\tnode marc.js [input file] [output file] [options]",
+        "\tmarc [input file or options] [output file] [program options]",
         "",
         "Input options:",
         "\tisbn:[number] to search LOC for an ISBN",
