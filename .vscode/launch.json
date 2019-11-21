@@ -32,9 +32,7 @@
             ],
             "program": "${workspaceFolder}/marc.js",
             "args": [
-                "lccn:2014397535",
-                "isbn:0062287516",
-                "barcode:123456"
+                "lccn:77-8498"
             ]
         },
         {

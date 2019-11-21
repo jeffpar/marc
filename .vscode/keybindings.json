@@ -10,6 +10,9 @@
     { "key": "alt+v", "when": "", "command": "editor.action.clipboardPasteAction"},
     { "key": "alt+z", "when": "", "command": "undo"},
     { "key": "alt+y", "when": "", "command": "redo"},
+    { "key": "ctrl+2", "when": "editorTextFocus", "command": "actions.find" },
+    { "key": "ctrl+a", "when": "editorTextFocus", "command": "cursorWordLeft" },
+    { "key": "ctrl+f", "when": "editorTextFocus", "command": "cursorWordRight" },
     { "key": "ctrl+s", "when": "editorTextFocus", "command": "cursorLeft" },
     { "key": "ctrl+d", "when": "editorTextFocus", "command": "cursorRight" },
     { "key": "ctrl+x", "when": "editorTextFocus", "command": "cursorDown" },
@@ -22,6 +25,6 @@
     { "key": "ctrl+q ctrl+d", "when": "editorTextFocus", "command": "cursorLineEnd" },
     { "key": "ctrl+q ctrl+r", "when": "editorTextFocus", "command": "cursorTop" },
     { "key": "ctrl+q ctrl+c", "when": "editorTextFocus", "command": "cursorBottom" },
-    { "key": "ctrl+l", "when": "editorTextFocus", "command": "editor.action.previousMatchFindAction" },
-    { "key": "ctrl+p", "when": "editorTextFocus", "command": "editor.action.nextMatchFindAction" }
+    { "key": "ctrl+l", "when": "", "command": "editor.action.previousMatchFindAction" },
+    { "key": "ctrl+p", "when": "", "command": "editor.action.nextMatchFindAction" }
 ]

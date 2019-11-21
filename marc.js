@@ -53,7 +53,7 @@ function parseMARC(data, format, outputFile)
         if (argv['json']) {
             records.forEach((rec) => console.log(JSON.stringify(rec, null, 2)));
         }
-        if (argv['text'] || !outputFile) {
+        if (!argv['quiet']) {
             marc4js.transform(records, {toFormat: "text"}, function(error, data) {
                 if (error) {
                     console.log(error.message);
@@ -220,6 +220,7 @@ function tweakMARC(records, outputFile)
                     let subFieldA = findSubField(dataField, "a"); 
                     if (subFieldA) {
                         if (subFieldA._data.indexOf(argv['isbn']) == 0) {
+                            removeTrailingPunctuation(subFieldA);
                             displaySubField(subFieldA);
                             cRetained++;
                         } else {
@@ -233,11 +234,13 @@ function tweakMARC(records, outputFile)
                 }
             } else {
                 /*
-                 * Otherwise, just display any and all ISBN numbers that are being retained.
+                 * Otherwise, just display any and all ISBN numbers that are being retained (well, OK, we'll clean up
+                 * any trailing punctuation in them, too).
                  */
                 while (dataField = findDataField(20, iLastDataField)) {
                     let subFieldA = findSubField(dataField, "a"); 
                     if (subFieldA) {
+                        removeTrailingPunctuation(subFieldA);
                         displaySubField(subFieldA);
                     }
                 }
@@ -253,6 +256,7 @@ function tweakMARC(records, outputFile)
             }
             if (argv['overwrite'] || !fs.existsSync(outputFile)) {
                 fs.writeFileSync(outputFile, data);
+                console.log(outputFile + " successfully written");
             } else {
                 console.log(outputFile + " already exists, use overwrite option if desired");
             }
@@ -388,7 +392,7 @@ function main()
 
 let argv = {}, argc = 0;
 let searches = ["lccn", "isbn", "barcode"];
-let booleans = ["text", "json", "skip", "overwrite", "verbose"];
+let booleans = ["text", "json", "skip", "overwrite", "quiet", "verbose"];
 for (let i = 2; i < process.argv.length; i++) {
     let arg = process.argv[i];
     if (arg.indexOf("--") == 0) arg = arg.substr(2);
@@ -431,23 +435,25 @@ for (let i = 2; i < process.argv.length; i++) {
 if (!argc) {
     let help = [
         "Usage:",
-        "\tmarc [input file or options] [output file] [program options]",
+        "\tmarc [input options] [output options] [program options]",
         "",
         "Input options:",
+        "\tname or URL of a MARC file (.txt, .mrc, or .xml)",
         "\tisbn:[number] to search LOC for an ISBN",
         "\tlccn:[number] to search LOC for an LCCN",
+        "",
+        "Output options:",
+        "\tname of output file (.mrc)",
+        "\tbarcode:[number] to name output file with barcode",
         "",
         "Program options:",
         "\ttext: display the MARC record(s) in text form",
         "\tjson: display the MARC record(s) in JSON form",
         "\tskip: skip any modifications to MARC record(s)",
         "\toverwrite: overwrite an existing output file",
-        "",
-        "The input file may be the URL of a MARC file or a local .txt, .mrc, or .xml file;",
-        "or you can initiate a search for a MARC file by ISBN or LCCN.",
-        "",
-        "If no output file is specified, any MARC records found will be displayed in text form."
-    ];
+        "\tquiet: quieter operation (doesn't automatically dump text)",
+        "\tverbose: noisier operation (displays diagnostic messages)"
+       ];
     help.forEach((s) => {console.log(s)});
     process.exit(1);
 }
