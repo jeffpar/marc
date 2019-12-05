@@ -32,6 +32,29 @@ function requestURL(url, file, done)
 }
 
 /**
+ * getMARCXML(body, outputFile)
+ * 
+ * @param {string} body
+ * @param {string} [outputFile]
+ */
+function getMARCXML(body, outputFile)
+{
+    let match = body.match(/<a.*?title="MARCXML version of this record".*?href="([^"]*)".*?>/);
+    if (match) {
+        let urlMARC = match[1];
+        console.log("found marcxml url: " + urlMARC);
+        request(urlMARC, function (error, response, body) {
+            if (error) {
+                console.log(error.message);
+                return;
+            }
+            if (argv['verbose']) console.log(body);
+            parseMARC(body, "marcxml", outputFile);
+        });
+    }
+}
+
+/**
  * parseMARC(data, format, outputFile)
  * 
  * @param {string} data
@@ -296,8 +319,8 @@ function main()
                 return;
             }
             /*
-             * If the 'input' argument appears to be a local file, download it, and parse it according to
-             * its file extension (eg, .txt, .mrc, or .xml).  You can create your own .txt file by copying
+             * If the 'input' argument appears to be a local file, read and parse it according to its
+             * file extension (eg, .txt, .mrc, or .xml).  You can create your own .txt file by copying
              * and pasting MARC text data.
              * 
              * Example: https://seattle.bibliocommons.com/item/catalogue_info/3138656030
@@ -365,19 +388,50 @@ function main()
                         return;
                     }
                     let match = body.match(/<title>([^<]*)<\/title>/);
-                    if (match) console.log("title of search results: " + match[1]);
-                    match = body.match(/<a.*?title="MARCXML version of this record".*?href="([^"]*)".*?>/);
                     if (match) {
-                        let urlMARC = match[1];
-                        console.log("found marcxml url: " + urlMARC);
-                        requestWithCookies(urlMARC, function (error, response, body) {
-                            if (error) {
-                                console.log(error.message);
-                                return;
+                        console.log("title of search results: " + match[1]);
+                        if (match[1] == "LC Catalog - Titles List") {
+                            let books = [];
+                            let items = body.match(/<li class="search-results-list">[\s\S]*?<\/li>/g);
+                            if (items) {
+                                /*
+                                 * Create an array of books containing titles, authors, and links.
+                                 */
+                                for (let i = 0; i < items.length; i++) {
+                                    let title = "", author = "", link = "";
+                                    let titleMatch = items[i].match(/<div class="[^"]*search-results-list-description-title[^"]*">([\s\S]*?)<\/div>/);
+                                    if (!titleMatch) continue;
+                                    let linkMatch = titleMatch[1].match(/<a\s*href="([^"]*)"[^>]*>([^<]*)<\/a>/);
+                                    if (linkMatch) {
+                                        link = linkMatch[1];
+                                        if (link[0] != '/' && link.indexOf("http") != 0) link = "https://catalog.loc.gov/vwebv/" + link;
+                                        link = link.replace(/&amp;/g, '&');
+                                        title = linkMatch[2];
+                                    }
+                                    if (argv['author']) {
+                                        let authorMatch = items[i].match(/<div class="[^"]*search-results-list-description-name[^"]*">([\s\S]*?)<\/div>/);
+                                        if (authorMatch) {
+                                            author = authorMatch[1];
+                                            if (author.toLowerCase().indexOf(argv['author'].toLowerCase()) < 0) continue;
+                                        }
+                                    }
+                                    books.push({title, author, link});
+                                }
                             }
-                            if (argv['verbose']) console.log(body);
-                            parseMARC(body, "marcxml", outputFile);
-                        });
+                            console.log(books);
+                            if (books.length > 1) outputFile = undefined;
+                            for (let i = 0; i < books.length; i++) {
+                                request(books[i].link, function (error, response, body) {
+                                    if (error) {
+                                        console.log(error.message);
+                                        return;
+                                    }
+                                    getMARCXML(body, outputFile);
+                                });
+                            }
+                            return;
+                        }
+                        getMARCXML(body, outputFile);
                     }
                 });
             });
@@ -391,7 +445,7 @@ function main()
 }
 
 let argv = {}, argc = 0;
-let searches = ["lccn", "isbn", "barcode"];
+let searches = ["lccn", "isbn", "author", "barcode"];
 let booleans = ["text", "json", "skip", "overwrite", "quiet", "verbose"];
 for (let i = 2; i < process.argv.length; i++) {
     let arg = process.argv[i];

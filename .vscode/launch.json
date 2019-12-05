@@ -16,8 +16,8 @@
             ],
             "program": "${workspaceFolder}/marc.js",
             "args": [
-                "isbn:1572315105",
-                "barcode:168177"
+                "isbn:93030056",
+                "author:gosney"
             ]
         },
         {

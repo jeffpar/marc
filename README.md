@@ -247,3 +247,40 @@ Output:
 
 Note that since the command also included an ISBN number, the "tweaks" included deleting all
 but the matching ISBN number.  If no ISBN number is specified, then all ISBN numbers are retained.
+
+## Special Cases
+
+### Multiple Matches
+
+Sometimes a search produces multiple matches.  For example, the following command:
+
+    marc lccn:93-30056
+
+produces "LC Catalog - Titles List" output.  In this example, the book we *actually* want is inside a "search-results-list" list item:
+
+    <li class="search-results-list">
+        ...
+        <div class="search-results-list-description">
+            <div class="resultListTextCell">
+                <div class="search-results-list-description-item search-results-list-description-format">Book</div>
+                <div class="search-results-list-description-item search-results-list-description-name">Gosney, Michael, 1954-</div>
+                <div class="search-results-list-description-item search-results-list-description-title">
+                <a href="holdingsInfo?searchId=13459&amp;recCount=25&amp;recPointer=1&amp;bibId=3469814">Gray book : designing in black &amp; white on your computer / Michael Gosney, John Odam, Jim Benson.</a>
+                </div>
+                <div class="search-results-list-description-item search-results-list-description-date">Chapel Hill, NC : Ventana Press, c1990.</div>
+                <div class="search-results-list-description-item search-results-list-description-classification">Z253.53 .G67 1990</div>
+                <div class="search-results-list-description-item search-results-list-description-request">Request in Jefferson or Adams Building Reading Rooms</div>
+            </div>
+        </div>
+    </li>
+
+and the link that will take us to the desired record is:
+
+    https://catalog.loc.gov/vwebv/holdingsInfo?searchId=13625&recCount=25&recPointer=1&bibId=3469814
+
+In order to deduce that, the tool needs some additional context to help identify the matching item:
+
+    marc lccn:93-30056 author:gosney
+
+If multiple items can't be reduced to a single item, either because no additional data was provided or the additional data didn't match
+any items (or matched more than one item), then no MARC record will be created, even if an output file or barcode was provided.
