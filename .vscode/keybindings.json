@@ -1,4 +1,4 @@
-// Place your key bindings in this file to override the defaultsauto[]
+// Place your key bindings in this file to override the defaults
 [
     { "key": "alt+s", "when": "", "command": "workbench.action.files.save" },
     { "key": "shift+alt+s", "when": "", "command": "workbench.action.files.saveAs" },
@@ -21,10 +21,13 @@
     { "key": "ctrl+z", "when": "editorTextFocus", "command": "scrollLineDown" },
     { "key": "ctrl+r", "when": "editorTextFocus", "command": "scrollPageUp" },
     { "key": "ctrl+c", "when": "editorTextFocus", "command": "scrollPageDown" },
+    { "key": "ctrl+n", "when": "editorTextFocus", "command": "editor.action.insertLineBefore"},
+    { "key": "ctrl+y", "when": "editorTextFocus", "command": "editor.action.deleteLines"},
+    { "key": "ctrl+l", "when": "", "command": "editor.action.previousMatchFindAction" },
+    { "key": "ctrl+p", "when": "", "command": "editor.action.nextMatchFindAction" },
     { "key": "ctrl+q ctrl+s", "when": "editorTextFocus", "command": "cursorLineStart" },
     { "key": "ctrl+q ctrl+d", "when": "editorTextFocus", "command": "cursorLineEnd" },
     { "key": "ctrl+q ctrl+r", "when": "editorTextFocus", "command": "cursorTop" },
     { "key": "ctrl+q ctrl+c", "when": "editorTextFocus", "command": "cursorBottom" },
-    { "key": "ctrl+l", "when": "", "command": "editor.action.previousMatchFindAction" },
-    { "key": "ctrl+p", "when": "", "command": "editor.action.nextMatchFindAction" }
+    { "key": "ctrl+q ctrl+y", "when": "editorTextFocus", "command": "deleteAllRight" }
 ]
