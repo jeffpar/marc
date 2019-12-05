@@ -52,6 +52,14 @@ function getMARCXML(body, outputFile)
             parseMARC(body, "marcxml", outputFile);
         });
     }
+    else {
+        match = body.match(/<title>([^<]*)<\/title>/);
+        if (match) {
+            console.log("unexpected search response: " + match[1]);
+        } else {
+            console.log("unrecognized search response");
+        }
+    }
 }
 
 /**
@@ -286,7 +294,7 @@ function tweakMARC(records, outputFile)
         });
     } else {
         if (tweaked) {
-            console.log("specify an output file to save the above tweaks");
+            console.log("specify an output file (or barcode:xxxxxx) to save the above data");
         }
     }
 }
@@ -410,10 +418,9 @@ function main()
                                     }
                                     if (argv['author']) {
                                         let authorMatch = items[i].match(/<div class="[^"]*search-results-list-description-name[^"]*">([\s\S]*?)<\/div>/);
-                                        if (authorMatch) {
-                                            author = authorMatch[1];
-                                            if (author.toLowerCase().indexOf(argv['author'].toLowerCase()) < 0) continue;
-                                        }
+                                        if (!authorMatch) continue;
+                                        author = authorMatch[1];
+                                        if (author.toLowerCase().indexOf(argv['author'].toLowerCase()) < 0) continue;
                                     }
                                     books.push({title, author, link});
                                 }
