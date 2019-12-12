@@ -294,7 +294,7 @@ function tweakMARC(records, outputFile)
         });
     } else {
         if (tweaked) {
-            console.log("specify an output file (or barcode:xxxxxx) to save the above data");
+            console.log("specify an output file (or barcode:######) to save the above data");
         }
     }
 }
@@ -500,18 +500,18 @@ if (!argc) {
         "",
         "Input options:",
         "\tname or URL of a MARC file (.txt, .mrc, or .xml)",
-        "\tisbn:[number] to search LOC for an ISBN",
-        "\tlccn:[number] to search LOC for an LCCN",
+        "\tisbn:########## to search LOC for an ISBN",
+        "\tlccn:##-##### to search LOC for an LCCN",
         "",
         "Output options:",
         "\tname of output file (.mrc)",
-        "\tbarcode:[number] to name output file with barcode",
+        "\tbarcode:###### to name output file with barcode",
         "",
         "Program options:",
         "\ttext: display the MARC record(s) in text form",
         "\tjson: display the MARC record(s) in JSON form",
         "\tskip: skip any modifications to MARC record(s)",
-        "\toverwrite: overwrite an existing output file",
+        "\toverwrite: replace an existing output file",
         "\tquiet: quieter operation (doesn't automatically dump text)",
         "\tverbose: noisier operation (displays diagnostic messages)"
        ];
