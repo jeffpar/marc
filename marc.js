@@ -63,6 +63,33 @@ function getMARCXML(body, outputFile)
 }
 
 /**
+ * fixMARC(records)
+ * 
+ * The MARC record found for "lccn:67-111749" contains a tag (650) with an empty subfield ($a), which the
+ * marc4js transform() function chokes on; we could fork the library, fix the bug, and add the library to
+ * our project, but the easiest solution is to simply "repair" the MARC record.
+ * 
+ * @param {Array} records
+ */
+function fixMARC(records)
+{
+    records.forEach((rec) => {
+        let dataFields = rec._dataFields;
+        for (let i = 0; i < dataFields.length; i++) {
+            let dataField = dataFields[i];
+            let subFields = dataField._subfields;
+            for (let j = 0; j < subFields.length; j++) {
+                let subField = subFields[j];
+                if (subField._code && subField._data === undefined) {
+                    console.log("warning: MARC record tag " + dataField._tag + " subfield '" + subField._code + "' contains no data");
+                    subField._data = "";
+                }
+            }
+        }
+    });
+}
+
+/**
  * parseMARC(data, format, outputFile)
  * 
  * @param {string} data
@@ -79,11 +106,16 @@ function parseMARC(data, format, outputFile)
             console.log(error.message);
             return;
         }
+
         console.log("read " + records.length + " record" + (records.length != 1? "s" : ""));
+        if (!records.length) return;
 
         if (argv['json']) {
             records.forEach((rec) => console.log(JSON.stringify(rec, null, 2)));
         }
+
+        fixMARC(records);
+
         if (!argv['quiet']) {
             marc4js.transform(records, {toFormat: "text"}, function(error, data) {
                 if (error) {
@@ -150,7 +182,7 @@ function tweakMARC(records, outputFile)
             };
 
             let displaySubField = function(subField, op = "sav") {
-                console.log('tag ' + tagCurrent + ' ' + op + ' subField "' + subField._code + '": "' + subField._data + '"');
+                console.log("tag " + tagCurrent + " " + op + " subField '" + subField._code + "': \"" + subField._data + "\"");
             };
 
             let findSubField = function(dataField, code) {

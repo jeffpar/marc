@@ -32,7 +32,7 @@
             ],
             "program": "${workspaceFolder}/marc.js",
             "args": [
-                "lccn:77-8498"
+                "lccn:67-111749"
             ]
         },
         {
