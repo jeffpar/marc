@@ -127,6 +127,7 @@ function parseMARC(data, format, outputFile)
             });
             return;
         }
+
         tweakMARC(records, outputFile);
     });
 }
@@ -140,8 +141,11 @@ function parseMARC(data, format, outputFile)
 function tweakMARC(records, outputFile)
 {
     let tweaked = false;
+
     if (!argv['skip']) {
+
         console.log("tweaks:");
+
         records.forEach((rec) => {
             let tagCurrent;
             let dataField, iLastDataField = -1;
@@ -198,6 +202,20 @@ function tweakMARC(records, outputFile)
                 return null;
             };
 
+            let getSubFieldString = function(dataField) {
+                let s = "";
+                if (dataField) {
+                    let subFields = dataField._subfields;
+                    for (let i = 0; i < subFields.length; i++) {
+                        let data = subFields[i]._data;
+                        if (!data) continue;
+                        if (s && data[0] != '.') s += " ";
+                        s += data;
+                    }
+                }
+                return s;
+            };
+
             let removeTrailingPunctuation = function(subField) {
                 if (subField) {
                     let match = subField._data.match(/^(.*?)\s*[/,.:;]$/);
@@ -235,30 +253,30 @@ function tweakMARC(records, outputFile)
             };
 
             /*
-            * Each dataField object has the following keys:
-            *
-            *      _tag
-            *      _indicator1
-            *      _indicator2
-            *      _subfields
-            * 
-            * Let's start by removing unwanted trailing punctuation in subfields "a" (Title),
-            * "b" (Remainder), and "c" (Statement of Responsibility) in tag "245" (Title Statement).
-            * Note: this is a non-repeatable (NR) tag.
-            * 
-            * https://www.oclc.org/bibformats/en/2xx/245.html
-            */
+             * Each dataField object has the following keys:
+             *
+             *      _tag
+             *      _indicator1
+             *      _indicator2
+             *      _subfields
+             * 
+             * Let's start by removing unwanted trailing punctuation in subfields "a" (Title),
+             * "b" (Remainder), and "c" (Statement of Responsibility) in tag "245" (Title Statement).
+             * Note: this is a non-repeatable (NR) tag.
+             * 
+             * https://www.oclc.org/bibformats/en/2xx/245.html
+             */
             dataField = findDataField(245);
             removeTrailingPunctuation(findSubField(dataField, "a"));
             removeTrailingPunctuation(findSubField(dataField, "b"));
             removeTrailingPunctuation(findSubField(dataField, "c"));
 
             /*
-            * Next, try moving "p." or "pages" from subfield "a" (Extent) to subfield "f" (Type of Unit)
-            * in tag "300" (Physical Description). Note: this is a repeatable (R) tag.
-            * 
-            * https://www.oclc.org/bibformats/en/3xx/300.html
-            */
+             * Next, try moving "p." or "pages" from subfield "a" (Extent) to subfield "f" (Type of Unit)
+             * in tag "300" (Physical Description). Note: this is a repeatable (R) tag.
+             * 
+             * https://www.oclc.org/bibformats/en/3xx/300.html
+             */
             while (dataField = findDataField(300, iLastDataField)) {
                 let subFieldF = findSubField(dataField, "f");
                 if (!subFieldF) {
@@ -272,11 +290,11 @@ function tweakMARC(records, outputFile)
             }
 
             /*
-            * Next, if an ISBN was specified, look for a matching subfield "a" of all "020" tags
-            * (International Standard Book Number) and remove any tags that don't match the ISBN.
-            * 
-            * https://www.oclc.org/bibformats/en/0xx/020.html
-            */
+             * Next, if an ISBN was specified, look for a matching subfield "a" of all "020" tags
+             * (International Standard Book Number) and remove any tags that don't match the ISBN.
+             * 
+             * https://www.oclc.org/bibformats/en/0xx/020.html
+             */
             if (argv['isbn']) {
                 let cRemoved = 0, cRetained = 0;
                 while (dataField = findDataField(20, iLastDataField)) {
@@ -307,6 +325,14 @@ function tweakMARC(records, outputFile)
                         displaySubField(subFieldA);
                     }
                 }
+            }
+
+            /*
+             * As a final gesture, extract the LOC call number from the "050" tag and display it.
+             */
+            let tagLOC = findDataField(50);
+            if (tagLOC) {
+                console.log("LOC call number: " + getSubFieldString(tagLOC));
             }
         });
     }
@@ -447,6 +473,7 @@ function main()
                                         if (link[0] != '/' && link.indexOf("http") != 0) link = "https://catalog.loc.gov/vwebv/" + link;
                                         link = link.replace(/&amp;/g, '&');
                                         title = linkMatch[2];
+                                        if (argv['title'] && title.toLowerCase().indexOf(argv['title'].toLowerCase()) < 0) continue;
                                     }
                                     if (argv['author']) {
                                         let authorMatch = items[i].match(/<div class="[^"]*search-results-list-description-name[^"]*">([\s\S]*?)<\/div>/);
@@ -458,7 +485,10 @@ function main()
                                 }
                             }
                             console.log(books);
-                            if (books.length > 1) outputFile = undefined;
+                            if (books.length > 1) {
+                                console.log("use title:keyword or author:name to narrow the results");
+                                return;
+                            }
                             for (let i = 0; i < books.length; i++) {
                                 request(books[i].link, function (error, response, body) {
                                     if (error) {
@@ -484,7 +514,7 @@ function main()
 }
 
 let argv = {}, argc = 0;
-let searches = ["lccn", "isbn", "author", "barcode"];
+let searches = ["lccn", "isbn", "title", "author", "barcode"];
 let booleans = ["text", "json", "skip", "overwrite", "quiet", "verbose"];
 for (let i = 2; i < process.argv.length; i++) {
     let arg = process.argv[i];
@@ -512,6 +542,10 @@ for (let i = 2; i < process.argv.length; i++) {
         continue;
     }
     if (!argv['input'] && !argv['isbn'] && !argv['lccn']) {
+        /*
+         * If there are 9 "digits" instead of 10, we assume it's an SBN; convert it to an ISBN by adding a leading zero.
+         */
+        if (arg.length == 9) arg = '0' + arg;
         argv['input'] = arg;
         argc++;
         continue;
