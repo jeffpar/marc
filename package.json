@@ -9,6 +9,7 @@
   "author": "Jeff Parsons",
   "license": "MIT",
   "dependencies": {
+    "eslint": "^6.7.2",
     "marc4js": "0.0.10",
     "request": "^2.88.0"
   }

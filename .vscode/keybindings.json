@@ -28,6 +28,7 @@
     { "key": "ctrl+l", "when": "", "command": "editor.action.previousMatchFindAction" },
     { "key": "ctrl+p", "when": "", "command": "editor.action.nextMatchFindAction" },
     { "key": "ctrl+o", "when": "", "command": "editor.action.startFindReplaceAction"},
+    { "key": "ctrl+v", "when": "", "command": "editor.action.clipboardPasteAction"},
     { "key": "ctrl+q ctrl+s", "when": "editorTextFocus", "command": "cursorLineStart" },
     { "key": "ctrl+q ctrl+d", "when": "editorTextFocus", "command": "cursorLineEnd" },
     { "key": "ctrl+q ctrl+r", "when": "editorTextFocus", "command": "cursorTop" },

@@ -7,9 +7,12 @@
  3. `cd` into your new `marc` directory and run `npm install`
  4. Test it: `node marc.js` should display usage instructions
 
-### Installing Node on Windows (The Hard Way)
+Keep your directory up-to-date with a periodic `git pull`.
 
-When you don't have Administrator privileges:
+### Setting up Node on Windows
+
+If you don't have Administrator privileges on Windows, you may not be able to install Node as shown above,
+but it's still possible to install it:
 
  1. From a CMD prompt, make a `nodejs` directory in `C:\ProgramData\Applications` (`mkdir nodejs`)
  2. From [https://nodejs.org/dist/v12.13.1/win-x64/](https://nodejs.org/dist/v12.13.1/win-x64/), download `node.exe` into `C:\ProgramData\Applications\nodejs`
@@ -74,15 +77,18 @@ Output:
     tag 300 new subField "a": "1 v. (unpaged)"
     tag 020 sav subField "a": "0449810798"
     tag 020 sav subField "a": "9780449810798"
-    specify an output file to save the above tweaks
+    specify an output file (or barcode:######) to save the above data
 
 Notes:
 
-The program doesn't save the file locally unless you *also* specify an output filename; e.g.:
+The program doesn't save the file locally unless you *also* specify an output filename, and it's
+recommended that output files be saved in the `output` directory, to avoid cluttering the current
+diretory.  For example:
 
     marc https://lccn.loc.gov/2012939473/marcxml output/391520.mrc
 
-Alternatively, if you specify a barcode, an output file will be created using the barcode as the filename:
+Alternatively, if you specify a barcode, an output file will be created in the `output` directory
+using the barcode as the filename:
 
     marc https://lccn.loc.gov/2012939473/marcxml barcode:391520
 
@@ -92,7 +98,7 @@ And if you also want to view the contents of the entire MARC file, add `text` to
 
 ### Example 2
 
-To read a previously downloaded MRC file, display its contents as "text", and then save the updated tags as a new file:
+To read a previously downloaded MRC file, save the updated tags as a new file, and display its contents:
 
     marc input/391520.mrc output/391520.mrc text
 
@@ -243,7 +249,7 @@ Output:
     tag 300 add subField "f": "pages"
     tag 020 del subField "a": "9780062287519 (hbk.)"
     tag 020 sav subField "a": "0062287516 (hbk.)"
-    specify an output file to save the above tweaks
+    specify an output file (or barcode:######) to save the above data
 
 Note that since the command also included an ISBN number, the "tweaks" included deleting all
 but the matching ISBN number.  If no ISBN number is specified, then all ISBN numbers are retained.
@@ -278,9 +284,14 @@ and the link that will take us to the desired record is:
 
     https://catalog.loc.gov/vwebv/holdingsInfo?searchId=13625&recCount=25&recPointer=1&bibId=3469814
 
-In order to deduce that, the tool needs some additional context to help identify the matching item:
+In order to deduce that, the tool needs some additional context to help identify the matching item, such as:
+
+    marc lccn:93-30056 title:gray
+
+or:
 
     marc lccn:93-30056 author:gosney
 
-If multiple items can't be reduced to a single item, either because no additional data was provided or the additional data didn't match
-any items (or matched more than one item), then no MARC record will be created, even if an output file or barcode was provided.
+If multiple items can't be reduced to a single item, either because no additional data was provided
+or the additional data didn't match any items (or matched more than one item), then no MARC record will
+be created, even if an output file or barcode was provided.
