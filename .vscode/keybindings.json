@@ -24,6 +24,8 @@
     { "key": "ctrl+g", "when": "editorTextFocus", "command": "deleteRight" },
     { "key": "ctrl+n", "when": "editorTextFocus", "command": "editor.action.insertLineBefore"},
     { "key": "ctrl+y", "when": "editorTextFocus", "command": "editor.action.deleteLines"},
+    { "key": "ctrl+i", "when": "editorTextFocus", "command": "editor.action.transformToLowercase"},
+    { "key": "ctrl+u", "when": "editorTextFocus", "command": "editor.action.transformToUppercase"},
     { "key": "ctrl+2", "when": "", "command": "actions.find" },
     { "key": "ctrl+l", "when": "", "command": "editor.action.previousMatchFindAction" },
     { "key": "ctrl+p", "when": "", "command": "editor.action.nextMatchFindAction" },
