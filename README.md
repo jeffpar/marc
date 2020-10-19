@@ -12,7 +12,7 @@ Keep your directory up-to-date with a periodic `git pull`.
 ### Setting up Node on Windows
 
 If you don't have Administrator privileges on Windows, you may not be able to install Node as shown above,
-but it's still possible to install it:
+but it's still possible to install it.  Use the following steps as a guide (the version numbers are from 2019).
 
  1. From a CMD prompt, make a `nodejs` directory in `C:\ProgramData\Applications` (`mkdir nodejs`)
  2. From [https://nodejs.org/dist/v12.13.1/win-x64/](https://nodejs.org/dist/v12.13.1/win-x64/), download `node.exe` into `C:\ProgramData\Applications\nodejs`
