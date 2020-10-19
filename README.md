@@ -83,7 +83,7 @@ Notes:
 
 The program doesn't save the file locally unless you *also* specify an output filename, and it's
 recommended that output files be saved in the `output` directory, to avoid cluttering the current
-diretory.  For example:
+directory.  For example:
 
     marc https://lccn.loc.gov/2012939473/marcxml output/391520.mrc
 
